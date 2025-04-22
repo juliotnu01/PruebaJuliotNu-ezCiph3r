@@ -32,9 +32,40 @@ export const useAuth = () => {
       throw error;
     }
   };
-
-  const register = async (email: string, password: string): Promise<T> => {
-    // Implementation here
+  /**
+   * Registers a new user with the provided details.
+   *
+   * @template T - The type of the response data returned by the registration request.
+   * @param email - The email address of the user.
+   * @param name - The name of the user.
+   * @param password - The password of the user.
+   * @param c_password - The confirmation of the password.
+   * @returns A promise that resolves with the registration response data of type T.
+   * @throws Will throw an error if the registration request fails.
+   */
+  const register = async ({
+    email,
+    name,
+    password,
+    c_password,
+  }: {
+    email: string;
+    name: string;
+    password: string;
+    c_password: string;
+  }): Promise<T> => {
+    try {
+      const { data } = await apiClient.post<T>('/register', {
+        email,
+        name,
+        password,
+        c_password,
+      });
+      return data;
+    } catch (error) {
+      console.error('Register error:', error);
+      throw error;
+    }
   };
 
   return { login, register };

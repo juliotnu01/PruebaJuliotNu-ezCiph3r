@@ -6,8 +6,8 @@ import { storeToRefs } from 'pinia';
 
 // auth
 const AuthStore = useAuthStore();
-const { user, loading } = storeToRefs(AuthStore);
-const { loginUser } = AuthStore;
+const { user, loading, loadingRegister, userRegister } = storeToRefs(AuthStore);
+const { loginUser, registerUser } = AuthStore;
 
 const tabs = shallowRef(0);
 </script>
@@ -35,57 +35,22 @@ const tabs = shallowRef(0);
               <v-window v-model="tabs">
                 <v-window-item class="pa-2" value="0">
                   <v-form @submit.prevent="loginUser">
-                    <v-text-field
-                      type="email"
-                      label="User email"
-                      v-model="user.email"
-                    ></v-text-field>
-                    <v-text-field
-                      type="password"
-                      label="Password"
-                      v-model="user.password"
-                    ></v-text-field>
-                    <v-btn :loading="loading" class="mt-2" type="submit" block
-                      >Login</v-btn
-                    >
+                    <v-text-field type="email" label="User email" v-model="user.email"></v-text-field>
+                    <v-text-field type="password" label="Password" v-model="user.password"></v-text-field>
+                    <v-btn :loading="loading" class="mt-2" type="submit" block>Login</v-btn>
                   </v-form>
                 </v-window-item>
 
                 <v-window-item class="pa-2" value="0">
                   <v-card>
-                    <v-empty-state
-                      class="pa-0"
-                      image="https://vuetifyjs.b-cdn.net/docs/images/components/v-empty-state/astro-dog.svg"
-                      size="200"
-                    >
-                      <template v-slot:media>
-                        <v-sheet class="py-4 mb-4" color="#fdefff">
-                          <v-img></v-img>
-                        </v-sheet>
-                      </template>
-
-                      <template v-slot:title>
-                        <div class="text-h6 text-high-emphasis">
-                          Get Started
-                        </div>
-                      </template>
-
-                      <template v-slot:text>
-                        <div
-                          class="text-body-2 font-weight-medium text-medium-emphasis"
-                        >
-                          Watch your favorite TV Shows with the Movies & TV app.
-                        </div>
-                      </template>
-
-                      <template v-slot:actions>
-                        <v-spacer></v-spacer>
-
-                        <v-btn color="#4c00d5" text="Shop TV Shows"></v-btn>
-
-                        <v-spacer></v-spacer>
-                      </template>
-                    </v-empty-state>
+                    <v-form @submit.prevent="registerUser">
+                      <v-text-field type="email" label="User email" v-model="userRegister.email"></v-text-field>
+                      <v-text-field type="text" label="User name" v-model="userRegister.name"></v-text-field>
+                      <v-text-field type="password" label="Password" v-model="userRegister.password"></v-text-field>
+                      <v-text-field type="password" label="Confirm password"
+                        v-model="userRegister.c_password"></v-text-field>
+                      <v-btn :loading="loadingRegister" class="mt-2" type="submit" block>Register</v-btn>
+                    </v-form>
                   </v-card>
                 </v-window-item>
               </v-window>
