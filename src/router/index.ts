@@ -5,8 +5,8 @@ import type { RouteRecordRaw } from 'vue-router';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'Home',
-    component: () => import('../App.vue'), // Lazy-loaded component
+    name: 'login.view',
+    component: () => import('@/views/LoginView.vue'),
   },
 ];
 
