@@ -4,9 +4,9 @@ import { defineStore } from 'pinia';
  * Interface for the state of the global store.
  */
 interface GlobalStoreState {
-    snackbarColor: string;
-    snackbarVisible: boolean;
-    snackbarMessage: string;
+  snackbarColor: string;
+  snackbarVisible: boolean;
+  snackbarMessage: string;
 }
 
 /**
@@ -17,30 +17,30 @@ interface GlobalStoreState {
  * and color of a snackbar component.
  */
 export const useGlobalStore = defineStore('global-store', {
+  /**
+   * State of the global store.
+   */
+  state: (): GlobalStoreState => ({
+    snackbarColor: '#0000FF',
+    snackbarVisible: false,
+    snackbarMessage: '',
+  }),
+  actions: {
     /**
-     * State of the global store.
+     * Displays the snackbar with a given message.
+     *
+     * @param {string} msg - The message to display in the snackbar.
      */
-    state: (): GlobalStoreState => ({
-        snackbarColor: '#0000FF',
-        snackbarVisible: false,
-        snackbarMessage: '',
-    }),
-    actions: {
-        /**
-         * Displays the snackbar with a given message.
-         *
-         * @param {string} msg - The message to display in the snackbar.
-         */
-        showToast(msg: string): void {
-            this.snackbarMessage = msg;
-            this.snackbarVisible = true;
-        },
-        /**
-         * Hides the snackbar and clears its message.
-         */
-        hideToast(): void {
-            this.snackbarVisible = false;
-            this.snackbarMessage = '';
-        },
+    showToast(msg: string): void {
+      this.snackbarMessage = msg;
+      this.snackbarVisible = true;
     },
+    /**
+     * Hides the snackbar and clears its message.
+     */
+    hideToast(): void {
+      this.snackbarVisible = false;
+      this.snackbarMessage = '';
+    },
+  },
 });

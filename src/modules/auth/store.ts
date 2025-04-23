@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { login, register } from './api';
 import { useGlobalStore } from '@/store'; // Asegúrate de que esta ruta sea correcta
-const globalStore = useGlobalStore();
+import router from '@/router'; // Importa el enrutador
 export interface User {
   id: number;
   uuid: string;
@@ -62,17 +62,17 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     /**
      * Handles the login process for a user.
-     * 
+     *
      * This asynchronous method attempts to log in a user using the provided credentials.
      * If successful, it saves the authentication token and user data, updates the authentication state,
      * and displays a success message using a global snackbar. If the login attempt fails, it catches
      * the error, logs it, and displays an error message using the global snackbar.
-     * 
+     *
      * @async
      * @returns {Promise<void>} A promise that resolves when the login process is complete.
      * @throws {Error} If an error occurs during the login attempt.
-     * 
-     * 
+     *
+     *
      */
     async loginUser() {
       this.loading = true;
@@ -84,14 +84,15 @@ export const useAuthStore = defineStore('auth', {
           this.isAuthenticated = true;
 
           // Configuración del snackbar
+          const globalStore = useGlobalStore();
+
           globalStore.snackbarColor = 'success';
           globalStore.snackbarMessage = 'Login successful!';
           globalStore.snackbarVisible = true;
+          router.push({ name: 'home.view' });
         }
       } catch (error) {
         console.error('Error during login attempt:', error);
-
-        // Configuración del snackbar
         const globalStore = useGlobalStore();
         globalStore.snackbarColor = 'error';
         globalStore.snackbarMessage = 'Login failed. Please try again.';
@@ -103,15 +104,15 @@ export const useAuthStore = defineStore('auth', {
 
     /**
      * Handles the user registration process.
-     * 
+     *
      * This asynchronous method attempts to register a user using the provided
      * `userRegister` data. During the process, it updates the `loadingRegister`
-     * state to indicate the ongoing operation. Upon successful registration, 
-     * it configures a global snackbar to display a success message. If an error 
-     * occurs during registration, it logs the error to the console and configures 
-     * the snackbar to display an error message. The `loadingRegister` state is 
+     * state to indicate the ongoing operation. Upon successful registration,
+     * it configures a global snackbar to display a success message. If an error
+     * occurs during registration, it logs the error to the console and configures
+     * the snackbar to display an error message. The `loadingRegister` state is
      * reset to `false` once the operation completes, regardless of success or failure.
-     * 
+     *
      * @async
      * @throws Will log an error to the console if the registration process fails.
      */
@@ -125,10 +126,11 @@ export const useAuthStore = defineStore('auth', {
         globalStore.snackbarColor = 'success';
         globalStore.snackbarMessage = 'Registration successful!';
         globalStore.snackbarVisible = true;
+        router.push({ name: 'home.view' });
+
       } catch (error) {
         console.error('Error during registration attempt:', error);
-
-        // Configuración del snackbar
+        const globalStore = useGlobalStore();
         globalStore.snackbarColor = 'error';
         globalStore.snackbarMessage = 'Registration failed. Please try again.';
         globalStore.snackbarVisible = true;

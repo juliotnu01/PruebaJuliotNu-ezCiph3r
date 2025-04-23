@@ -18,10 +18,6 @@ const tabs = shallowRef(0);
       <v-card class="mx-auto" max-width="360" variant="flat" border>
         <v-layout>
           <v-app-bar>
-            <template #prepend>
-              <v-app-bar-nav-icon></v-app-bar-nav-icon>
-            </template>
-
             <template #extension>
               <v-tabs v-model="tabs" color="#4c00d5" grow>
                 <v-tab text="Login"></v-tab>

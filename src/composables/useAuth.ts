@@ -50,7 +50,6 @@ export const useAuth = () => {
    * @returns A promise that resolves with the registration response data of type T.
    * @throws Will throw an error if the registration request fails.
    */
-  
 
   const register = async ({
     email,
