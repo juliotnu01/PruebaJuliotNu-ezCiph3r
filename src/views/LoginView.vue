@@ -35,21 +35,52 @@ const tabs = shallowRef(0);
               <v-window v-model="tabs">
                 <v-window-item class="pa-2" value="0">
                   <v-form @submit.prevent="loginUser">
-                    <v-text-field type="email" label="User email" v-model="user.email"></v-text-field>
-                    <v-text-field type="password" label="Password" v-model="user.password"></v-text-field>
-                    <v-btn :loading="loading" class="mt-2" type="submit" block>Login</v-btn>
+                    <v-text-field
+                      type="email"
+                      label="User email"
+                      v-model="user.email"
+                    ></v-text-field>
+                    <v-text-field
+                      type="password"
+                      label="Password"
+                      v-model="user.password"
+                    ></v-text-field>
+                    <v-btn :loading="loading" class="mt-2" type="submit" block
+                      >Login</v-btn
+                    >
                   </v-form>
                 </v-window-item>
 
                 <v-window-item class="pa-2" value="0">
                   <v-card>
                     <v-form @submit.prevent="registerUser">
-                      <v-text-field type="email" label="User email" v-model="userRegister.email"></v-text-field>
-                      <v-text-field type="text" label="User name" v-model="userRegister.name"></v-text-field>
-                      <v-text-field type="password" label="Password" v-model="userRegister.password"></v-text-field>
-                      <v-text-field type="password" label="Confirm password"
-                        v-model="userRegister.c_password"></v-text-field>
-                      <v-btn :loading="loadingRegister" class="mt-2" type="submit" block>Register</v-btn>
+                      <v-text-field
+                        type="email"
+                        label="User email"
+                        v-model="userRegister.email"
+                      ></v-text-field>
+                      <v-text-field
+                        type="text"
+                        label="User name"
+                        v-model="userRegister.name"
+                      ></v-text-field>
+                      <v-text-field
+                        type="password"
+                        label="Password"
+                        v-model="userRegister.password"
+                      ></v-text-field>
+                      <v-text-field
+                        type="password"
+                        label="Confirm password"
+                        v-model="userRegister.c_password"
+                      ></v-text-field>
+                      <v-btn
+                        :loading="loadingRegister"
+                        class="mt-2"
+                        type="submit"
+                        block
+                        >Register</v-btn
+                      >
                     </v-form>
                   </v-card>
                 </v-window-item>
