@@ -1,5 +1,17 @@
 import { apiClient } from '@/api';
 
+interface RegisterParams {
+  email: string;
+  name: string;
+  password: string;
+  c_password: string;
+}
+
+interface LoginParams {
+  email: string;
+  password: string;
+}
+
 /**
  * A composable function that provides authentication-related methods.
  *
@@ -14,13 +26,8 @@ export const useAuth = () => {
    * @returns A promise that resolves with the login response data of type T.
    * @throws Will throw an error if the login request fails.
    */
-  const login = async ({
-    email,
-    password,
-  }: {
-    email: string;
-    password: string;
-  }): Promise<T> => {
+
+  const login = async ({ email, password }: LoginParams): Promise<T> => {
     try {
       const { data } = await apiClient.post<T>('/login', {
         email,
@@ -43,17 +50,14 @@ export const useAuth = () => {
    * @returns A promise that resolves with the registration response data of type T.
    * @throws Will throw an error if the registration request fails.
    */
+  
+
   const register = async ({
     email,
     name,
     password,
     c_password,
-  }: {
-    email: string;
-    name: string;
-    password: string;
-    c_password: string;
-  }): Promise<T> => {
+  }: RegisterParams): Promise<T> => {
     try {
       const { data } = await apiClient.post<T>('/register', {
         email,
