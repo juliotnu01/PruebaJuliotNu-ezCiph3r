@@ -127,7 +127,6 @@ export const useAuthStore = defineStore('auth', {
         globalStore.snackbarMessage = 'Registration successful!';
         globalStore.snackbarVisible = true;
         router.push({ name: 'home.view' });
-
       } catch (error) {
         console.error('Error during registration attempt:', error);
         const globalStore = useGlobalStore();
