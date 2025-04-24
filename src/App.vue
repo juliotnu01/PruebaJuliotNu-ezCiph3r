@@ -23,12 +23,15 @@ const drawer = ref(true);
   <v-app>
     <MainLayout>
       <template #app-bar v-if="isLoggedIn">
-        <v-app-bar flat density="compact">
+        <v-app-bar density="compact">
           <v-app-bar-nav-icon
-            variant="flat"
+            variant="text"
             @click.stop="drawer = !drawer"
           ></v-app-bar-nav-icon>
           <v-toolbar-title class="text-h6">ciph3r</v-toolbar-title>
+          <template v-slot:append>
+            <v-btn block color="#cecece"> Logout </v-btn>
+          </template>
         </v-app-bar>
       </template>
 
@@ -41,9 +44,7 @@ const drawer = ref(true);
               title="Sandra Adams"
             ></v-list-item>
           </v-list>
-
           <v-divider></v-divider>
-
           <v-list density="compact" nav>
             <v-list-item
               prepend-icon="mdi-folder"
@@ -61,14 +62,6 @@ const drawer = ref(true);
               value="starred"
             ></v-list-item>
           </v-list>
-
-          <v-divider></v-divider>
-
-          <template #append>
-            <div class="pa-2">
-              <v-btn block color="#cecece"> Logout </v-btn>
-            </div>
-          </template>
         </v-navigation-drawer>
       </template>
 

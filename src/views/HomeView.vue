@@ -1,167 +1,134 @@
 <template>
-  <v-container fluid class="product-container">
-    <!-- Contenedor principal -->
-    <v-row class="mb-4">
-      <v-col cols="12">
-        <v-btn block color="secondary" @click="toggleSkeleton" :loading="loadingSkeleton" :disabled="loadingSkeleton">
-          {{ showSkeleton ? 'Ocultar Skeleton' : 'Mostrar Skeleton' }}
-        </v-btn>
-      </v-col>
-    </v-row>
+  <HomeLayout
+    :skeleton="loading"
+    :items="displayedProducts"
+    :all-items-length="allProducts.length"
+    :loading-more="loadingMore"
+    @load-more-items="loadMoreProducts"
+  >
+    <!-- Slot para el esqueleto -->
+    <template #skeleton>
+      <v-row>
+        <v-col v-for="i in 12" :key="'skeleton-' + i" cols="12" sm="6" md="4" lg="3" xl="2">
+          <v-skeleton-loader type="card-avatar, actions"></v-skeleton-loader>
+        </v-col>
+      </v-row>
+    </template>
 
-    <!-- Skeleton Loader -->
-    <v-row v-if="showSkeleton">
-      <v-col v-for="i in itemsPerPage" :key="'skeleton-' + i" cols="12" sm="6" md="4" lg="3" xl="2">
-        <v-skeleton-loader type="card-avatar, actions"></v-skeleton-loader>
-      </v-col>
-    </v-row>
+    <!-- Slot para los elementos -->
+    <template #items="{ items }">
+      <v-row>
+        <v-col v-for="product in items" :key="product.id" cols="12" sm="6" md="4" lg="3" xl="2">
+          <ProductComponent
+            :product="product"
+            @view-details="openProductDetail(product)"
+          />
+        </v-col>
+      </v-row>
+    </template>
+  </HomeLayout>
 
-    <!-- Contenido real -->
-    <v-row v-else>
-      <v-col v-for="(product, index) in displayedProducts" :key="product.id" cols="12" sm="6" md="4" lg="3" xl="2">
-        <!-- Tarjeta de producto -->
-        <v-card class="product-card" elevation="2">
-          <v-img :src="product.image" height="200px" cover class="rounded-t"></v-img>
-          <v-card-title class="text-subtitle-1">{{ product.name }}</v-card-title>
-          <v-card-subtitle class="font-weight-bold">${{ product.price }}</v-card-subtitle>
-          <v-card-actions class="d-flex justify-space-between align-center">
-            <v-btn color="primary" @click="addToCart(product)" size="small">
-              Añadir al carrito
-            </v-btn>
-            <v-btn variant="text" color="secondary" size="small" @click="viewDetails(product)">
-              Ver detalles
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-row>
-
-    <!-- Carga infinita -->
-    <v-infinite-scroll v-if="!showSkeleton && displayedProducts.length < allProducts.length" :loading="loadingMore"
-      @load="loadMoreProducts" :threshold="300" scroll-target=".product-container">
-      <template v-slot:loading>
-        <v-row justify="center" class="mt-4">
-          <v-progress-circular indeterminate color="primary"></v-progress-circular>
-        </v-row>
-      </template>
-    </v-infinite-scroll>
-
-    <!-- Mensaje cuando no hay más productos -->
-    <v-row v-if="!showSkeleton && displayedProducts.length === allProducts.length" justify="center" class="mt-4">
-      <v-col cols="12" class="text-center">
-        <p>No hay más productos disponibles.</p>
-      </v-col>
-    </v-row>
-  </v-container>
+  <!-- Modal de detalles -->
+  <ProductDetail :product="selectedProduct" ref="productDetailModal" />
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import HomeLayout from '@/layouts/HomeLayout.vue';
+import ProductComponent from '@/components/ProductComponent.vue';
+import ProductDetail from '@/components/ProductDetail.vue';
 
+// Interfaz para el usuario
+interface User {
+  name: string;
+  rating: number;
+  punctuation: number;
+  avatar: string | null;
+}
+
+// Interfaz para el producto
 interface Product {
   id: number;
   name: string;
-  price: number;
-  image: string;
+  resumen: string;
+  description: string;
+  sku: string;
+  images: string[];
+  price: string;
+  width: string;
+  height: string;
+  depth: string;
+  weight: string;
+  stock: number;
+  categories: string[];
+  colors: string[];
+  user: User;
 }
 
+// Variables reactivas
 const allProducts = ref<Product[]>([]);
 const displayedProducts = ref<Product[]>([]);
 const loadingMore = ref(false);
-const itemsPerPage = ref(1000);
-const page = ref(1);
+const loading = ref(true);
+const selectedProduct = ref<Product | null>(null); // Producto seleccionado para el modal
+const productDetailModal = ref(null);
 
-// Estados para el skeleton
-const showSkeleton = ref(false);
-const loadingSkeleton = ref(false);
-
-// Simulación de carga inicial de productos (más items)
+// Simulación de carga inicial de productos
 const loadInitialProducts = async () => {
-  await new Promise((resolve) => setTimeout(resolve, 10000));
-  const initialData: Product[] = Array.from({ length: 100000 }, (_, i) => ({
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  const initialData: Product[] = Array.from({ length: 100 }, (_, i) => ({
     id: i + 1,
     name: `Producto ${i + 1}`,
-    price: Math.floor(Math.random() * 100) + 10,
-    image: `https://picsum.photos/200/300?random=${i + 1}`,
+    resumen: `Resumen del Producto ${i + 1}`,
+    description: `Descripción detallada del Producto ${i + 1}`,
+    sku: `SKU-${i + 1}`,
+    images: [`https://picsum.photos/200/300?random=${i + 1}`],
+    price: `${Math.floor(Math.random() * 100) + 10}`,
+    width: "112",
+    height: "89",
+    depth: "68",
+    weight: "191",
+    stock: Math.floor(Math.random() * 10) + 1,
+    categories: [],
+    colors: [],
+    user: {
+      name: "Administrador",
+      rating: 2.62,
+      punctuation: 72,
+      avatar: null,
+    },
   }));
   allProducts.value = initialData;
-  displayedProducts.value = allProducts.value.slice(0, itemsPerPage.value);
+  displayedProducts.value = initialData.slice(0, 12); // Mostrar los primeros 12 productos
+  loading.value = false;
 };
 
 // Cargar más productos
 const loadMoreProducts = async () => {
-  console.log('Loading more products...');
-
   if (loadingMore.value) return;
-  loadingMore.value = true;
 
-  // Simula un pequeño retraso para la carga
+  loadingMore.value = true;
   await new Promise((resolve) => setTimeout(resolve, 800));
 
-  // Calcular el índice de inicio
-  const startIndex = page.value * itemsPerPage.value;
-  const nextProducts = allProducts.value.slice(startIndex, startIndex + itemsPerPage.value);
+  const nextProducts = allProducts.value.slice(
+    displayedProducts.value.length,
+    displayedProducts.value.length + 12,
+  );
 
   if (nextProducts.length > 0) {
     displayedProducts.value.push(...nextProducts);
-    page.value++;
   }
 
   loadingMore.value = false;
 };
 
-// Función para añadir al carrito
-const addToCart = (product: Product) => {
-  alert(`Producto "${product.name}" añadido al carrito.`);
-};
-
-// Función para ver detalles del producto
-const viewDetails = (product: Product) => {
-  alert(`Detalles del producto "${product.name}":\nPrecio: $${product.price}`);
-};
-
-// Función para alternar el skeleton
-const toggleSkeleton = async () => {
-  loadingSkeleton.value = true;
-  showSkeleton.value = !showSkeleton.value;
-
-  // Simula un pequeño retraso para que se vea el estado de carga
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  loadingSkeleton.value = false;
+// Abrir el modal de detalles
+const openProductDetail = (product: Product) => {
+  selectedProduct.value = product; // Asignar el producto seleccionado
+  productDetailModal.value.openModal(); // Abrir el modal
 };
 
 onMounted(() => {
   loadInitialProducts();
 });
 </script>
-
-<style scoped>
-/* Estilos para el contenedor principal */
-.product-container {
-  overflow-y: auto !important;
-  max-height: 80vh !important;
-  scrollbar-width: none;
-  /* Firefox */
-  -ms-overflow-style: none;
-  /* IE and Edge */
-}
-
-.product-container::-webkit-scrollbar {
-  display: none;
-  /* Chrome, Safari and Opera */
-}
-
-/* Estilos para las tarjetas de productos */
-.product-card {
-  transition: transform 0.2s ease-in-out;
-}
-
-.product-card:hover {
-  transform: scale(1.02);
-}
-
-/* Espaciado adicional */
-.v-card__actions {
-  padding: 12px;
-}
-</style>

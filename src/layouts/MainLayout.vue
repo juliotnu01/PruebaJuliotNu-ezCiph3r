@@ -1,9 +1,9 @@
 <script setup lang="ts"></script>
 <template>
-  <v-layout class="rounded rounded-md border">
+  <v-layout>
     <slot name="app-bar"></slot>
     <slot name="navigation-drawer"></slot>
-    <v-main class="d-flex align-center justify-center" height="100vh" style="overflow: hidden;">
+    <v-main>
       <slot name="container"></slot>
     </v-main>
     <slot name="snackbar"></slot>
