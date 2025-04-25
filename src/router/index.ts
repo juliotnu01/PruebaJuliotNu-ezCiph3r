@@ -29,9 +29,23 @@ const routes: Array<RouteRecordRaw> = [
     meta: { requiresAuth: true },
   },
 ];
+
 const router = createRouter({
   history: createWebHistory(),
   routes,
 });
+
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+
+  if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated) {
+    next({ name: 'login.view' });
+  } else if (to.name === 'login.view' && isAuthenticated) {
+    next({ name: 'home.view' });
+  } else {
+    next();
+  }
+});
+
 
 export default router;
