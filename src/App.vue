@@ -4,9 +4,9 @@ import { RouterView } from 'vue-router';
 import MainLayout from './layouts/MainLayout.vue';
 import { storeToRefs } from 'pinia';
 
-//global store
+// Global store
 import { useGlobalStore } from '@/store';
-//login store
+// Login store
 import { useAuthStore } from '@/modules/auth/store';
 
 const globalStore = useGlobalStore();
@@ -30,7 +30,7 @@ const drawer = ref(true);
           ></v-app-bar-nav-icon>
           <v-toolbar-title class="text-h6">ciph3r</v-toolbar-title>
           <template v-slot:append>
-            <v-btn block color="#cecece"> Logout </v-btn>
+            <v-btn block color="#cecece" @click="authStore.logout"> Logout </v-btn>
           </template>
         </v-app-bar>
       </template>
@@ -40,8 +40,8 @@ const drawer = ref(true);
           <v-list>
             <v-list-item
               prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg"
-              subtitle="sandra_a88@gmailcom"
-              title="Sandra Adams"
+              :subtitle="authStore.user?.email"
+              :title="authStore.user?.name"
             ></v-list-item>
           </v-list>
           <v-divider></v-divider>

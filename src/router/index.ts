@@ -1,19 +1,21 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import type { RouteRecordRaw } from 'vue-router';
-import { useAuthStore } from '@/modules/auth/store';
-import { storeToRefs } from 'pinia';
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
+    redirect: '/login',
+  },
+  {
+    path: '/login',
     name: 'login.view',
     component: () => import('@/views/LoginView.vue'),
     meta: { requiresAuth: false },
     beforeEnter: (to, from, next) => {
-      const authStore = useAuthStore();
-      const { isLoggedIn } = storeToRefs(authStore);
+      const isAuthenticated =
+        localStorage.getItem('isAuthenticated') === 'true';
 
-      if (isLoggedIn.value) {
+      if (isAuthenticated) {
         next({ name: 'home.view' });
       } else {
         next();

@@ -44,7 +44,7 @@ export interface AuthState {
 
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
-    isAuthenticated: false,
+    isAuthenticated: !!localStorage.getItem('token'),
     user: {
       email: 'admin@mail.com',
       password: '1q2w3e4r',
@@ -81,7 +81,7 @@ export const useAuthStore = defineStore('auth', {
         if (data.token && data.user) {
           this.saveToken(data.token);
           this.saveUser(data.user);
-          this.isAuthenticated = true;
+          this.setAuthenticationStatus(true)
 
           // Configuración del snackbar
           const globalStore = useGlobalStore();
@@ -149,9 +149,13 @@ export const useAuthStore = defineStore('auth', {
     saveUser(user: User) {
       localStorage.setItem('user', JSON.stringify(user));
     },
+    setAuthenticationStatus(status: boolean) {
+      localStorage.setItem('isAuthenticated', JSON.stringify(status));
+      this.isAuthenticated = status || JSON.parse(localStorage.getItem('isAuthenticated') || 'false');
+    },
   },
 
   getters: {
-    isLoggedIn: (state) => state.isAuthenticated,
+    isLoggedIn: (state) => state.isAuthenticated
   },
 });
