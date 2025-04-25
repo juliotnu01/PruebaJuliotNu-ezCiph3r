@@ -156,7 +156,7 @@ interface Product {
 
 // Props
 const props = defineProps<{
-  product: Product;
+  product: Product | null;
 }>();
 
 // Estado del modal
