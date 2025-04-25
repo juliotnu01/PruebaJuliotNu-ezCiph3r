@@ -59,18 +59,13 @@ export const useProductStore = defineStore('product', {
       }
     },
     addProduct(product: any) {
-      this.products.push(product); // Agrega un producto a la lista
+      
     },
     removeProduct(id: number) {
-      this.products = this.products.filter((product) => product.id !== id); // Elimina un producto
+    
     },
     updateProduct(updatedProduct: any) {
-      const index = this.products.findIndex(
-        (product) => product.id === updatedProduct.id,
-      );
-      if (index !== -1) {
-        this.products[index] = updatedProduct; // Actualiza un producto existente
-      }
+     
     },
   },
 });

@@ -140,6 +140,8 @@ export const useAuthStore = defineStore('auth', {
 
     logout() {
       this.isAuthenticated = false;
+      localStorage.clear();
+      router.push({ name: 'login.view' });
     },
 
     saveToken(token: string) {

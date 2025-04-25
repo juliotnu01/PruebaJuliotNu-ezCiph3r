@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, type Ref } from 'vue';
 import HomeLayout from '@/layouts/HomeLayout.vue';
 import ProductComponent from '@/components/ProductComponent.vue';
 import ProductDetail from '@/components/ProductDetail.vue';
@@ -41,7 +41,7 @@ const { fetchProducts } = productStore;
 
 // Variables reactivas
 const selectedProduct = ref<any | null>(null); // Producto seleccionado para el modal
-const productDetailModal = ref(null);
+const productDetailModal: Ref<any> = ref(false);
 const currentPage = ref(1); // Página actual
 const loadingMore = ref(false); // Estado de carga para "cargar más"
 
